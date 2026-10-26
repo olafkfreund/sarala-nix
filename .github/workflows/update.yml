@@ -1,0 +1,53 @@
+name: Update
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+# The automatic token only reads; pushes and the PR use UPDATE_TOKEN.
+permissions:
+  contents: read
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          github-token: ${{ github.token }}
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Update inputs and Sarala
+        id: bump
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          nix flake update
+          old=$(nix eval --raw .#sarala.version)
+          # A broken Sarala bump must not block the daily input update.
+          nix run nixpkgs#nix-update -- --flake sarala \
+            || echo "::warning::nix-update failed; updating flake inputs only"
+          new=$(nix eval --raw .#sarala.version)
+          if [ "$old" = "$new" ]; then
+            echo "title=chore: update flake inputs" >> "$GITHUB_OUTPUT"
+          else
+            echo "title=sarala: $old -> $new" >> "$GITHUB_OUTPUT"
+          fi
+      # UPDATE_TOKEN, not GITHUB_TOKEN: PRs opened with GITHUB_TOKEN do not trigger CI.
+      - uses: peter-evans/create-pull-request@v7
+        id: pr
+        with:
+          token: ${{ secrets.UPDATE_TOKEN }}
+          branch: auto/update
+          delete-branch: true
+          title: ${{ steps.bump.outputs.title }}
+          commit-message: ${{ steps.bump.outputs.title }}
+          body: Automated daily update. Merges itself once CI passes.
+      - name: Enable auto-merge
+        if: steps.pr.outputs.pull-request-operation == 'created' || steps.pr.outputs.pull-request-operation == 'updated'
+        env:
+          GH_TOKEN: ${{ secrets.UPDATE_TOKEN }}
+        run: gh pr merge --auto --squash "${{ steps.pr.outputs.pull-request-number }}" -R "${{ github.repository }}"
