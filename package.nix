@@ -27,7 +27,7 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "sarala";
-  version = "1.3.3";
+  version = "1.3.2";
 
   src = fetchFromGitHub {
     owner = "solancer";
