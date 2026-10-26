@@ -22,7 +22,7 @@ intent: intent/2026-10-26-1-sarala-flake.md
 ### Repo layout
 
 ```
-flake.nix            inputs: nixpkgs (nixos-unstable) only; outputs below
+flake.nix            inputs: nixpkgs (nixos-unstable), home-manager (checks only)
 package.nix          callPackage-able derivation, args: withVoice ? true
 modules/nixos.nix    programs.sarala
 modules/home.nix     programs.sarala
@@ -36,9 +36,9 @@ Flake outputs (per system in `[x86_64-linux aarch64-linux]`):
 `packages.{sarala,default}`, `apps.default`, `checks.*`, `formatter` (nixfmt),
 plus system-independent `overlays.default`, `nixosModules.{sarala,default}`,
 `homeManagerModules.{sarala,default}`. No flake-utils / flake-parts: a
-`genAttrs` over two systems is a few lines. Home Manager is not a flake input;
-the HM module is a plain module, and the HM check pulls `home-manager` only
-under `checks` via a second input marked for checks (see Risks).
+`genAttrs` over two systems is a few lines. `home-manager` is a second input,
+used only by `checks.home-manager`; the HM module itself is a plain module
+that needs nothing from it (see Risks).
 
 ### Package (`package.nix`)
 
