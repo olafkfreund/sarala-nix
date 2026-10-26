@@ -144,3 +144,16 @@ A new standalone repo: nothing deployed to any host. Disable `update.yml`
 (`gh workflow disable update.yml`) to stop the automation, revert the merge
 commit, or archive the repo. Remove the secret with
 `gh secret delete UPDATE_TOKEN -R olafkfreund/sarala-nix`.
+
+## Deviations during implementation
+
+- Steps 1–8 were implemented by Claude (Opus), not the `coder` agent: the
+  agent stalled for 19 min without writing a file (likely blocked on a
+  permission prompt in its pane) and was stopped.
+- `formatter` is `nixfmt-tree`, not `nixfmt`: `nix fmt` runs the formatter
+  with no arguments, and bare `nixfmt` then waits on stdin forever.
+- The aarch64 CI job runs `nix flake check -L` instead of naming the checks:
+  aarch64 `checks` already omit `vm`, so the result is the same set.
+- The `withVoice = false` evaluation is a check of its own
+  (`checks.no-voice-eval`, a text file holding the drvPath) rather than a
+  CI-only `nix eval` step, so it also runs locally.
