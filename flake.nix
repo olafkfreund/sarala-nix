@@ -82,6 +82,7 @@
           no-voice-eval = pkgs.writeText "no-voice-drv" (sarala.override { withVoice = false; }).drvPath;
           home-manager = pkgs.runCommand "sarala-hm-check" { } ''
             grep -q 'text/markdown=sarala.desktop' ${home}/home-files/.config/mimeapps.list
+            grep -q 'text/x-markdown=sarala.desktop' ${home}/home-files/.config/mimeapps.list
             test -e ${home}/home-path/share/applications/sarala.desktop
             touch $out
           '';

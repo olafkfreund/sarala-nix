@@ -157,3 +157,10 @@ commit, or archive the repo. Remove the secret with
 - The `withVoice = false` evaluation is a check of its own
   (`checks.no-voice-eval`, a text file holding the drvPath) rather than a
   CI-only `nix eval` step, so it also runs locally.
+- Review fixes (Opus/Codex/agy, step 9): `update.yml` no longer persists
+  UPDATE_TOKEN in `.git/config`; `GITHUB_TOKEN` is read-only and authenticates
+  `nix flake update`/`nix-update` against API rate limits; a failed `nix-update`
+  only warns so the input bump still lands; auto-merge runs only when the PR
+  was created or updated. CI uses `udevadm trigger --settle`. Checks also
+  assert `text/x-markdown`, and the VM test asserts the process is still
+  alive after start-up. README documents `inputs.nixpkgs.follows`.

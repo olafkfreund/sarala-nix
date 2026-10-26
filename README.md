@@ -39,6 +39,11 @@ nix run github:olafkfreund/sarala-nix
 }
 ```
 
+To share your system's nixpkgs (and its graphics drivers) instead of this
+flake's lock, add `inputs.sarala.inputs.nixpkgs.follows = "nixpkgs";`. That
+needs a recent nixos-unstable (pnpm 11 and `fetchPnpmDeps` fetcherVersion 5);
+on older nixpkgs, leave it out.
+
 If you use Home Manager as a flake as well, add
 `inputs.sarala.inputs.home-manager.follows = "home-manager";` (the input is
 only used by this repo's checks).
