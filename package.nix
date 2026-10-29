@@ -27,18 +27,18 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "sarala";
-  version = "1.4.1";
+  version = "1.4.2";
 
   src = fetchFromGitHub {
     owner = "solancer";
     repo = "sarala";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-LFlxctpHCHJr6S7BpI3uGS0+b0fPqJQCkcQ6SdpIYDg=";
+    hash = "sha256-p4d+mClhL2bYeSNGAKP4SeDwMvCy2gapEdjMZGB9Ags=";
   };
 
   cargoRoot = "src-tauri";
   buildAndTestSubdir = "src-tauri";
-  cargoHash = "sha256-wuNiwZ6Iqsz+Q8dEcK5zdrG2Sp33VhD/2s/76L8iSaE=";
+  cargoHash = "sha256-O0wrgkZBN2QH5RMu6toYkAen+V9Xve0r8spOzCVVPAE=";
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
