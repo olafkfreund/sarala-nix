@@ -27,24 +27,24 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "sarala";
-  version = "1.4.2";
+  version = "1.5.0";
 
   src = fetchFromGitHub {
     owner = "solancer";
     repo = "sarala";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-p4d+mClhL2bYeSNGAKP4SeDwMvCy2gapEdjMZGB9Ags=";
+    hash = "sha256-XmeC7lYsUvJMuC4uh076dqkXBF5aG9Xa+7mx43ZrTjM=";
   };
 
   cargoRoot = "src-tauri";
   buildAndTestSubdir = "src-tauri";
-  cargoHash = "sha256-O0wrgkZBN2QH5RMu6toYkAen+V9Xve0r8spOzCVVPAE=";
+  cargoHash = "sha256-kz5BHHu1GfJgLxn6C+mfeh6KE7Y105HOWVCHk8ssRIM=";
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
     pnpm = pnpm_11;
     fetcherVersion = 5;
-    hash = "sha256-84+JK2rjGnJqZPsPk8JOWOygcJTVz4IMsb+PilqFlpw=";
+    hash = "sha256-1R5kulkuha1GGoZePQtkhImR/7KO3wFTYvhMi2MqnYM=";
   };
 
   nativeBuildInputs = [
